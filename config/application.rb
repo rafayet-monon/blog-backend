@@ -33,7 +33,8 @@ module BlogBackend
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
-    config.hosts << 'd02aca91d64f.ngrok.io'
+    # config.hosts << 'e5e552128dc6.ngrok.io'
+    config.autoload_paths += Dir[Rails.root.join("lib/fast_jsonapi/*.rb")].each {|l| require l }
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins '*'
