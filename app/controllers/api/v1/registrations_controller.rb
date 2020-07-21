@@ -22,7 +22,10 @@ module Api
         else
           clean_up_passwords resource
           set_minimum_password_length
-          respond_with resource
+          error = ::CustomErrorService.new(source: 'signup', title: resource.errors.full_messages.to_sentence, code: 'err_002',
+                                           status: 422)
+
+          render json: Api::RequestErrorSerializer.new(error).serialized_json, status: 422
         end
       end
 
