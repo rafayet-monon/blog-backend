@@ -5,13 +5,15 @@ module Api
       respond_to :json
 
       def create
-        byebug
         user = User.find_by_email(sign_in_params[:email])
 
-        if user && user.valid_password?(sign_in_params[:password])
-          @current_user = user
+        if user&.valid_password?(sign_in_params[:password])
+          render json: Api::V1::LoginSerializer.new(user).serializable_hash
         else
-          render json: { errors: { 'email or password' => ['is invalid'] } }, status: :unprocessable_entity
+          error = ::CustomErrorService.new(source: 'login', title: 'Invalid Email or Password', code: 'err_001',
+                                           status: 422)
+
+          render json: Api::RequestErrorSerializer.new(error).serialized_json, status: 422
         end
       end
 
@@ -20,10 +22,6 @@ module Api
       # Notice the name of the method
       def sign_in_params
         params.require(:user).permit(:email, :password)
-      end
-
-      def respond_with(resource, _opts = {})
-        render json: resource
       end
 
       def respond_to_on_destroy

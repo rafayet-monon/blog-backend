@@ -3,7 +3,9 @@ module Api
     class UsersController < BaseController
       before_action :authenticate_user!
 
-      def show; end
+      def show
+        render json: Api::V1::UserProfileSerializer.new(current_user).serializable_hash
+      end
 
       def update
         if current_user.update_attributes(user_params)
