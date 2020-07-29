@@ -15,6 +15,7 @@ Rails.application.routes.draw do
                  }
       resource :user, only: [:show, :update]
       resources :home, only: [:index]
+      resources :blogs
     end
   end
 end
